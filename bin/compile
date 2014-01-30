@@ -17,4 +17,5 @@ $build_dir/vendor/node/bin/npm -g install bower
 
 status "Installing Bower dependencies."
 PATH=$PATH:$build_dir/vendor/node/bin
+pwd
 $build_dir/vendor/node/bin/bower install
