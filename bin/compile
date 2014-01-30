@@ -16,4 +16,5 @@ status "Installing Bower."
 $build_dir/vendor/node/bin/npm -g install bower
 
 status "Installing Bower dependencies."
+PATH=$PATH:$build_dir/vendor/node/bin
 $build_dir/vendor/node/bin/bower install
