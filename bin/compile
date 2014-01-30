@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+set -e
+
+status() {
+  echo "-----> $*"
+}
+
+build_dir=$1
+cache_dir=$2
+
+# TODO: assuming this buildpack is run after the Node buildpack using multi
+# for now.
+
+status "Installing Bower."
+$build_dir/vendor/node/bin/npm -g install bower
+
+status "Installing Bower dependencies."
+$build_dir/vendor/node/bin/bower install

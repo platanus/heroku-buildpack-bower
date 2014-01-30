@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+if [ -f $1/bower.json ]; then
+    echo "Bower" && exit 0
+else
+    echo "Bower not detected" && exit 1
+fi
