@@ -24,7 +24,8 @@ else
     node_dir=$bower_cache_home/node
     if [ ! -d $node_dir ]; then
         status "Installing Node, this may take a moment."
-        curl http://s3pository.heroku.com/node/v$vendored_node_version/node-v$vendored_node_version-linux-x64.tar.gz | tar xfz - -C $node_dir --strip-components=1
+        mkdir $node_dir
+        curl -s http://s3pository.heroku.com/node/v$vendored_node_version/node-v$vendored_node_version-linux-x64.tar.gz | tar xfz - -C $node_dir --strip-components=1
     fi
 fi
 
