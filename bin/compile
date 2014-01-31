@@ -9,11 +9,15 @@ status() {
 build_dir=$1
 cache_dir=$2
 
+echo $cache_dir
+
 # TODO: assuming this buildpack is run after the Node buildpack using multi
 # for now.
 node_dir=$build_dir/vendor/node
 
 mkdir -p $cache_dir/bower/cache
+
+ls -R $cache_dir/bower/cache
 
 if [ -d $cache_dir/bower/app ]; then
     cp -r $cache_dir/bower/app $node_dir/lib/node_modules/bower
