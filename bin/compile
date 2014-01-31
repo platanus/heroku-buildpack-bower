@@ -11,11 +11,18 @@ cache_dir=$2
 
 # TODO: assuming this buildpack is run after the Node buildpack using multi
 # for now.
+node_dir=$build_dir/vendor/node
 
-status "Installing Bower."
-$build_dir/vendor/node/bin/npm -g install bower
+mkdir -p $cache_dir/bower/cache
+
+if [ -d $cache_dir/bower/app ]; then
+    cp -r $cache_dir/bower/app $node_dir/lib/node_modules/bower
+else
+    status "Installing Bower."
+    $node_dir/bin/npm -g install bower
+    cp -r $node_dir/lib/node_modules/bower $cache_dir/bower/app
+fi
 
 status "Installing Bower dependencies."
 PATH=$PATH:$build_dir/vendor/node/bin
-pwd
-$build_dir/vendor/node/bin/bower install
+$build_dir/vendor/node/bin/bower --config.cwd=$build_dir --config.storage.cache=$cache_dir/bower/cache/packages --config.storage.registry=$cache_dir/bower/cache/registry install
