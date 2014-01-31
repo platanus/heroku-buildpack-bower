@@ -18,7 +18,7 @@ node_dir=$bower_cache_home/node
 bower_app=$node_dir/lib/node_modules/bower
 
 if [ ! -d $node_dir ]; then
-    status "Vendoring a copy of Node to use with Bower, this may take a moment. The Node install is cached for subsequent runs."
+    status "Vendoring Node v$vendored_node_version to run Bower."
     mkdir $node_dir
     curl -s http://s3pository.heroku.com/node/v$vendored_node_version/node-v$vendored_node_version-linux-x64.tar.gz | tar xfz - -C $node_dir --strip-components=1
 fi
