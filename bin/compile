@@ -6,23 +6,36 @@ status() {
   echo "-----> $*"
 }
 
+vendored_node_version=0.10.25 # This is the version we'll install if there isn't already a Node install present.
+
 build_dir=$1
 cache_dir=$2
 
-# TODO: assuming this buildpack is run after the Node buildpack using multi
-# for now.
-node_dir=$build_dir/vendor/node
+bower_cache_home=$cache_dir/bower
+mkdir -p $bower_cache_home/cache
 
-mkdir -p $cache_dir/bower/cache
+# Try to use the node that heroku-buildpack-nodejs vendors.
+if [ -d $build_dir/vendor/node ]; then
+    status "Using existing Node"
+    node_dir=$build_dir/vendor/node
+else
+    # Screw it! We'll use our own!
+    status "Using vendored Node v$vendored_node_version"
+    node_dir=$bower_cache_home/node
+    if [ ! -d $node_dir ]; then
+        status "Installing Node, this may take a moment."
+        curl http://s3pository.heroku.com/node/v$vendored_node_version/node-v$vendored_node_version-linux-x64.tar.gz | tar xfz - -C $node_dir --strip-components=1
+    fi
+fi
 
 if [ -d $cache_dir/bower/app ]; then
     cp -r $cache_dir/bower/app $node_dir/lib/node_modules/bower
 else
-    status "Installing Bower."
+    status "Installing Bower. This may take a moment."
     $node_dir/bin/npm -g install bower
     cp -r $node_dir/lib/node_modules/bower $cache_dir/bower/app
 fi
 
 status "Installing Bower dependencies."
 PATH=$PATH:$node_dir/bin
-$build_dir/vendor/node/lib/node_modules/bower/bin/bower --config.cwd=$build_dir --config.storage.packages=$cache_dir/bower/cache/packages --config.storage.registry=$cache_dir/bower/cache/registry install
+$node_dir/lib/node_modules/bower/bin/bower --config.cwd=$build_dir --config.storage.packages=$cache_dir/bower/cache/packages --config.storage.registry=$cache_dir/bower/cache/registry install
