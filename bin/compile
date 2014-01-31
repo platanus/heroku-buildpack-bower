@@ -24,5 +24,5 @@ else
 fi
 
 status "Installing Bower dependencies."
-PATH=$PATH:$build_dir/vendor/node/bin
-$build_dir/vendor/node/bin/bower --config.cwd=$build_dir --config.storage.cache=$cache_dir/bower/cache/packages --config.storage.registry=$cache_dir/bower/cache/registry install
+PATH=$PATH:$node_dir/bin
+$build_dir/vendor/node/lib/node_modules/bower/bin/bower --config.cwd=$build_dir --config.storage.cache=$cache_dir/bower/cache/packages --config.storage.registry=$cache_dir/bower/cache/registry install
