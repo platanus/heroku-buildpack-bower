@@ -6,7 +6,7 @@ status() {
   echo "-----> $*"
 }
 
-vendored_node_version=0.10.25 # This is the version we'll install if there isn't already a Node install present.
+vendored_node_version=0.10.25
 
 build_dir=$1
 cache_dir=$2
@@ -14,29 +14,21 @@ cache_dir=$2
 bower_cache_home=$cache_dir/bower
 mkdir -p $bower_cache_home/cache
 
-# Try to use the node that heroku-buildpack-nodejs vendors.
-if [ -d $build_dir/vendor/node ]; then
-    status "Using existing Node"
-    node_dir=$build_dir/vendor/node
-else
-    # Screw it! We'll use our own!
-    status "Using vendored Node v$vendored_node_version"
-    node_dir=$bower_cache_home/node
-    if [ ! -d $node_dir ]; then
-        status "Installing Node, this may take a moment."
-        mkdir $node_dir
-        curl -s http://s3pository.heroku.com/node/v$vendored_node_version/node-v$vendored_node_version-linux-x64.tar.gz | tar xfz - -C $node_dir --strip-components=1
-    fi
+node_dir=$bower_cache_home/node
+bower_app=$node_dir/lib/node_modules/bower
+
+if [ ! -d $node_dir ]; then
+    status "Vendoring a copy of Node to use with Bower, this may take a moment. The Node install is cached for subsequent runs."
+    mkdir $node_dir
+    curl -s ghttp://s3pository.heroku.com/node/v$vendored_node_version/node-v$vendored_node_version-linux-x64.tar.gz | tar xfz - -C $node_dir --strip-components=1
 fi
 
-if [ -d $cache_dir/bower/app ]; then
-    cp -r $cache_dir/bower/app $node_dir/lib/node_modules/bower
-else
-    status "Installing Bower. This may take a moment."
-    $node_dir/bin/npm -g install bower
-    cp -r $node_dir/lib/node_modules/bower $cache_dir/bower/app
+# TODO: check for bower updates?
+if [ ! -d $bower_app ]; then
+    status "Installing Bower, this may take a moment. The Bower installation is cached for subsequent runs."
+    $node_dir/bin/npm --silent -g install bower
 fi
 
 status "Installing Bower dependencies."
 PATH=$PATH:$node_dir/bin
-$node_dir/lib/node_modules/bower/bin/bower --config.cwd=$build_dir --config.storage.packages=$cache_dir/bower/cache/packages --config.storage.registry=$cache_dir/bower/cache/registry install
+$bower_app/bin/bower --config.cwd=$build_dir --config.storage.packages=$bower_cache_home/packages --config.storage.registry=$bower_cache_home/registry install
