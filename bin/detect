@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# TODO: parse .bowerrc (if exists) to get bower_components directory.
-# If it's checked into the repo, then we don't need to run.
-
 if [ -f $1/bower.json ]; then
     echo "Bower" && exit 0
 else
