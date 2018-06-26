@@ -6,7 +6,7 @@ status() {
   echo "-----> $*"
 }
 
-vendored_node_version=4.2.4
+vendored_node_version=8.11.3
 
 build_dir=$1
 cache_dir=$2
