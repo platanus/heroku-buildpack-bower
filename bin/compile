@@ -23,6 +23,8 @@ if [ ! -d $node_dir ]; then
     curl -s http://s3pository.heroku.com/node/v$vendored_node_version/node-v$vendored_node_version-linux-x64.tar.gz | tar xfz - -C $node_dir --strip-components=1
 fi
 
+export BOWER_REGISTRY=https://registry.bower.io
+
 # TODO: check for bower updates?
 if [ ! -d $bower_app ]; then
     status "Installing Bower, this may take a moment."
