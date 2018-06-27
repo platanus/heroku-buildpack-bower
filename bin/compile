@@ -31,4 +31,5 @@ fi
 
 status "Installing Bower dependencies."
 PATH=$PATH:$node_dir/bin
+$bower_app/bin/bower --version
 $bower_app/bin/bower --config.cwd=$build_dir --config.storage.packages=$bower_cache_home/packages --config.storage.registry=$bower_cache_home/registry install
