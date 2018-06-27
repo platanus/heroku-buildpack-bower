@@ -6,7 +6,7 @@ status() {
   echo "-----> $*"
 }
 
-vendored_node_version=4.2.4
+vendored_node_version=8.11.3
 
 build_dir=$1
 cache_dir=$2
@@ -23,12 +23,15 @@ if [ ! -d $node_dir ]; then
     curl -s http://s3pository.heroku.com/node/v$vendored_node_version/node-v$vendored_node_version-linux-x64.tar.gz | tar xfz - -C $node_dir --strip-components=1
 fi
 
+export BOWER_REGISTRY=https://registry.bower.io
+
 # TODO: check for bower updates?
 if [ ! -d $bower_app ]; then
     status "Installing Bower, this may take a moment."
-    $node_dir/bin/npm --silent -g install bower
+    $node_dir/bin/npm --silent -g install bower@^1.8.4
 fi
 
 status "Installing Bower dependencies."
 PATH=$PATH:$node_dir/bin
+$bower_app/bin/bower --version
 $bower_app/bin/bower --config.cwd=$build_dir --config.storage.packages=$bower_cache_home/packages --config.storage.registry=$bower_cache_home/registry install
