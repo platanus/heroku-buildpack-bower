@@ -26,7 +26,7 @@ fi
 # TODO: check for bower updates?
 if [ ! -d $bower_app ]; then
     status "Installing Bower, this may take a moment."
-    $node_dir/bin/npm --silent -g install bower
+    $node_dir/bin/npm --silent -g install bower@^1.8.4
 fi
 
 status "Installing Bower dependencies."
